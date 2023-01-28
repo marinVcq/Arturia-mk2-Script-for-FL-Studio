@@ -9,10 +9,17 @@ import transport
 import channels
 import mixer
 
-# define variables
-play_this_song = 36
-show_mx = 48
-show_pl = 53
+# Control song variables
+play_song = 36
+reset_song = 37
+rewind = 38
+fast_forward = 39
+
+# Show windows variables
+show_mx = 40
+show_pl = 41
+show_ch = 42
+show_pr = 43
 
 
 def OnMidiMsg(event):
@@ -24,9 +31,37 @@ def OnMidiMsg(event):
 
         # Push Button
         if event.midiId == 144:
-            if event.data1 == play_this_song:
+            
+            # Control Transport
+            
+            # Toggle song play/pause            
+            if event.data1 == play_song:
                 transport.start()
                 event.handled = True
+
+            # Reset song           
+            if event.data1 == reset_song:
+                transport.stop()
+                event.handled = True
+
+            # Rewind song position          
+            if event.data1 == rewind:
+                if event.data2 > 0:
+                    transport.rewind(2)
+                else:
+                    transport.start(0)
+
+                event.handled = True
+
+            # Forward song position          
+            if event.data1 == fast_forward:
+                if event.data2 > 0:
+                    transport.fastForward(2)
+                else:
+                    transport.start(0)
+                event.handled = True
+            
+            # Show mixer pannel
             if event.data1 == show_mx:
                 if ui.getVisible(0) == 0:  # if window is not visible
                     ui.showWindow(0)  # make it visible
@@ -35,6 +70,16 @@ def OnMidiMsg(event):
                 else:
                     ui.hideWindow(0)  # if it is visible hide it
                     event.handled = True
+            # Show channel pannel
+            if event.data1 == show_ch:
+                if ui.getVisible(1) == 0:
+                    ui.showWindow(1)
+                    event.handled = True
+                else:
+                    ui.hideWindow(1)
+                    event.handled = True
+                                        
+            # Show playlist pannel
             if event.data1 == show_pl:
                 if ui.getVisible(2) == 0:
                     ui.showWindow(2)
@@ -42,34 +87,18 @@ def OnMidiMsg(event):
                 else:
                     ui.hideWindow(2)
                     event.handled = True
-            # Toggle mixer track slot 1
-            if event.data1 == 37:
-                mixer.enableTrack(1)
-                event.handled = True
-            # Toggle mixer track slot 2
-            if event.data1 == 38:
-                mixer.enableTrack(2)
-                event.handled = True
-            # Toggle mixer track slot 3
-            if event.data1 == 39:
-                mixer.enableTrack(3)
-                event.handled = True
-            # Toggle mixer track slot 4
-            if event.data1 == 40:
-                mixer.enableTrack(4)
-                event.handled = True
-            # Toggle mixer track slot 5
-            if event.data1 == 41:
-                mixer.enableTrack(5)
-                event.handled = True
-            # Toggle mixer track slot 6
-            if event.data1 == 42:
-                mixer.enableTrack(6)
-                event.handled = True
-            # Toggle mixer track slot 7
-            if event.data1 == 43:
-                mixer.enableTrack(7)
-                event.handled = True
+    
+                # Show playlist pannel
+            if event.data1 == show_pr:
+                if ui.getVisible(3) == 0:
+                    ui.showWindow(3)
+                    event.handled = True
+                else:
+                    ui.hideWindow(3)
+                    event.handled = True
+    
+
+
                 
         # Control Button
         if event.midiId == 176:
@@ -163,6 +192,73 @@ def OnMidiMsg(event):
                     if vol >= 100:
                         vol = 100
                     mixer.setTrackVolume(14,vol/100)
+                    
+                # Toggle mixer track slot 1
+                if event.data1 == 20:
+                    mixer.enableTrack(1)
+                    event.handled = True
+                # Toggle mixer track slot 2
+                if event.data1 == 21:
+                    mixer.enableTrack(2)
+                    event.handled = True
+                # Toggle mixer track slot 3
+                if event.data1 == 22:
+                    mixer.enableTrack(3)
+                    event.handled = True
+                # Toggle mixer track slot 4
+                if event.data1 == 23:
+                    mixer.enableTrack(4)
+                    event.handled = True
+                # Toggle mixer track slot 5
+                if event.data1 == 24:
+                    mixer.enableTrack(5)
+                    event.handled = True
+                # Toggle mixer track slot 6
+                if event.data1 == 25:
+                    mixer.enableTrack(6)
+                    event.handled = True
+                # Toggle mixer track slot 7
+                if event.data1 == 26:
+                    mixer.enableTrack(7)
+                    event.handled = True
+                # Toggle mixer track slot 8
+                if event.data1 == 27:
+                    mixer.enableTrack(8)
+                    event.handled = True
+                # Toggle mixer track slot 9
+                if event.data1 == 28:
+                    mixer.enableTrack(9)
+                    event.handled = True
+                # Toggle mixer track slot 10
+                if event.data1 == 29:
+                    mixer.enableTrack(10)
+                    event.handled = True
+                # Toggle mixer track slot 11
+                if event.data1 == 30:
+                    mixer.enableTrack(11)
+                    event.handled = True
+                # Toggle mixer track slot 12
+                if event.data1 == 31:
+                    mixer.enableTrack(12)
+                    event.handled = True
+                # Toggle mixer track slot 13
+                if event.data1 == 41:
+                    mixer.enableTrack(13)
+                    event.handled = True
+                # Toggle mixer track slot 14
+                if event.data1 == 46:
+                    mixer.enableTrack(14)
+                    event.handled = True
+                # Toggle mixer track slot 15
+                if event.data1 == 47:
+                    mixer.enableTrack(15)
+                    event.handled = True
+                # Toggle mixer track slot 16
+                if event.data1 == 52:
+                    mixer.enableTrack(16)
+                    event.handled = True
+
+
 def OnControlChange(event):
         # I have 5 faders. You can edit fader channels or use this block to use every single fader.
     if 1 <= event.data1 <= 5:
